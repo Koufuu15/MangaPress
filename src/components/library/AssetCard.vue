@@ -18,15 +18,15 @@
       @click.stop
     >
       <button @click="move">
-        移動
+        {{ t("move") }}
       </button>
 
       <button @click="rename">
-        名前変更
+        {{ t("rename") }}
       </button>
 
       <button @click="remove">
-        削除
+        {{ t("remove") }}
       </button>
     </div>
   </div>
@@ -34,6 +34,9 @@
 
 <script setup>
 import { ref } from "vue"
+import { useLanguage } from "@/composables/useLanguage"
+
+const { t } = useLanguage()
 
 const props = defineProps({
   asset:{

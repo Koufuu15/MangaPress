@@ -1,5 +1,6 @@
 import { marked } from "marked"
 import { captureBlob } from "@/utils/capture"
+import { useLanguage } from "@/composables/useLanguage"
 
 /**
  * クリップボード関連
@@ -8,14 +9,15 @@ import { captureBlob } from "@/utils/capture"
  * @param {Ref} markdown
  */
 export function useClipboard(previewRef, markdown) {
+  const { t } = useLanguage()
 
   async function copyMarkdown() {
     try {
       await navigator.clipboard.writeText(markdown.value)
-      alert("Markdownをコピーしました！")
+      alert(t("markdownCopied"))
     } catch (e) {
       console.error(e)
-      alert("コピーに失敗しました")
+      alert(t("copyFailed"))
     }
   }
 
@@ -25,10 +27,10 @@ export function useClipboard(previewRef, markdown) {
 
       await navigator.clipboard.writeText(html)
 
-      alert("HTMLをコピーしました！")
+      alert(t("htmlCopied"))
     } catch (e) {
       console.error(e)
-      alert("コピーに失敗しました")
+      alert(t("copyFailed"))
     }
   }
 
@@ -42,10 +44,10 @@ export function useClipboard(previewRef, markdown) {
         })
       ])
 
-      alert("画像をコピーしました！")
+      alert(t("imageCopied"))
     } catch (e) {
       console.error(e)
-      alert("画像コピーに失敗しました")
+      alert(t("imageCopyFailed"))
     }
   }
 

@@ -4,6 +4,7 @@ import { computed, ref, watch } from "vue"
 
 import defaultFolders from "@/data/defaultFolders"
 import { getUserFolders, addUserFolder } from "@/utils/userFolders"
+import { useLanguage } from "@/composables/useLanguage"
 
 const props = defineProps({
   open: {
@@ -23,6 +24,7 @@ const newFolderMode = ref(false)
 const newFolderName = ref("")
 
 const userFolders = ref([])
+const { t } = useLanguage()
 
 watch(
   () => props.open,
@@ -51,7 +53,7 @@ function createFolder() {
   const folder = addUserFolder(value)
 
   if (!folder) {
-    alert("同じ名前のフォルダがあります")
+    alert(t("folderExists"))
     return
   }
 
@@ -65,7 +67,7 @@ function createFolder() {
 
 function save() {
   if (!name.value.trim()) {
-    alert("画像名を入力してください")
+    alert(t("imageNameRequired"))
     return
   }
 
@@ -96,28 +98,28 @@ function close() {
       class="upload-dialog"
     >
       <h2>
-        Upload Image
+        {{ t("uploadTitle") }}
       </h2>
 
       <label>
-        画像名
+        {{ t("imageName") }}
       </label>
 
       <input
         v-model="name"
         type="text"
-        placeholder="画像名"
+        :placeholder="t('imageName')"
       />
 
       <label>
-        保存先
+        {{ t("destination") }}
       </label>
 
       <select
         v-model="folderId"
       >
         <option value="">
-          未分類
+          {{ t("uncategorized") }}
         </option>
 
         <option
@@ -125,7 +127,7 @@ function close() {
           :key="folder.id"
           :value="folder.id"
         >
-          {{ folder.icon }} {{ folder.name }}
+          {{ folder.icon }} {{ folder.id === "" ? t("uncategorized") : folder.name }}
         </option>
       </select>
 
@@ -133,7 +135,7 @@ function close() {
         class="new-folder-button"
         @click="newFolderMode = !newFolderMode"
       >
-        ＋ 新しいフォルダ
+        {{ t("newFolder") }}
       </button>
 
       <div
@@ -143,13 +145,13 @@ function close() {
         <input
           v-model="newFolderName"
           type="text"
-          placeholder="フォルダ名"
+          :placeholder="t('folderName')"
         />
 
         <button
           @click="createFolder"
         >
-          作成
+          {{ t("createFolder") }}
         </button>
       </div>
 
@@ -157,13 +159,13 @@ function close() {
         <button
           @click="close"
         >
-          キャンセル
+          {{ t("cancel") }}
         </button>
 
         <button
           @click="save"
         >
-          保存
+          {{ t("save") }}
         </button>
       </div>
     </div>

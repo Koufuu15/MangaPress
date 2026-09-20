@@ -10,22 +10,22 @@
         <input
           v-model="name"
           class="name-input"
-          placeholder="フォルダ名"
+          :placeholder="t('folderName')"
         />
 
         <div class="modal-actions">
           <button @click="close">
-            キャンセル
+            {{ t("cancel") }}
           </button>
           <button @click="submit">
-            {{ mode === "create" ? "作成" : "変更" }}
+            {{ mode === "create" ? t("createFolder") : t("rename") }}
           </button>
         </div>
       </template>
 
       <template v-else>
         <p>
-          「{{ folder.name }}」を削除しますか？
+          {{ t("deleteFolderQuestion").replace("{name}", folder.name) }}
         </p>
 
         <label>
@@ -34,7 +34,7 @@
             type="radio"
             value="move"
           />
-          画像を未分類へ移動
+          {{ t("moveImagesToUncategorized") }}
         </label>
 
         <label>
@@ -43,16 +43,16 @@
             type="radio"
             value="delete"
           />
-          画像も削除
+          {{ t("deleteImagesToo") }}
         </label>
 
         <div class="modal-actions">
           <button @click="close">
-            キャンセル
+            {{ t("cancel") }}
           </button>
 
           <button @click="submit">
-            削除
+            {{ t("remove") }}
           </button>
         </div>
       </template>
@@ -62,6 +62,9 @@
 
 <script setup>
 import { ref, computed } from "vue"
+import { useLanguage } from "@/composables/useLanguage"
+
+const { t } = useLanguage()
 
 const props = defineProps({
   mode:{
@@ -87,14 +90,14 @@ const deleteMode = ref("move")
 
 const title = computed(()=>{
   if(props.mode === "create"){
-    return "フォルダ作成"
+    return t("folderCreate")
   }
 
   if(props.mode === "rename"){
-    return "フォルダ名変更"
+    return t("folderRename")
   }
 
-  return "フォルダ削除"
+  return t("folderDelete")
 })
 
 function submit(){

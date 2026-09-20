@@ -2,7 +2,7 @@
   <div v-if="modelValue" class="asset-overlay" @click.self="close">
     <div class="asset-picker">
       <header class="picker-header">
-        <h2>画像を選択</h2>
+        <h2>{{ t("selectImage") }}</h2>
         <button class="close-button" @click="close">×</button>
       </header>
 
@@ -56,6 +56,7 @@ import defaultFolders from "@/data/defaultFolders"
 
 import { getAllAssets } from "@/utils/assetResolver"
 import { getUserFolders } from "@/utils/userFolders"
+import { useLanguage } from "@/composables/useLanguage"
 import {
   deleteUserAsset,
   renameUserAsset,
@@ -81,6 +82,7 @@ const managerOpen = ref(false)
 
 const folderSelectOpen = ref(false)
 const moveTarget = ref(null)
+const { t } = useLanguage()
 
 const folders = computed(()=>[
   ...defaultFolders,
@@ -124,7 +126,7 @@ function selectAsset(asset){
 
 function renameAsset(asset){
   const name = prompt(
-    "新しい名前",
+    t("imageName"),
     asset.name
   )
 
@@ -136,7 +138,7 @@ function renameAsset(asset){
 }
 
 function deleteAsset(asset){
-  if(!confirm(`${asset.name}を削除しますか？`)){
+  if(!confirm(`${asset.name} ${t("remove")}?`)){
     return
   }
 

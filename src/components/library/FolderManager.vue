@@ -2,7 +2,7 @@
   <div class="folder-overlay" @click.self="close">
     <div class="folder-manager">
       <header class="manager-header">
-        <h3>フォルダ管理</h3>
+        <h3>{{ t("folderManagement") }}</h3>
         <button class="close-button" @click="close">×</button>
       </header>
 
@@ -21,7 +21,7 @@
       </div>
 
       <button class="add-button" @click="openCreate">
-        ＋ フォルダ追加
+        {{ t("addFolder") }}
       </button>
 
       <FolderEditModal
@@ -38,6 +38,7 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import FolderEditModal from "./FolderEditModal.vue"
+import { useLanguage } from "@/composables/useLanguage"
 
 import {
   getUserFolders,
@@ -52,6 +53,7 @@ const emit = defineEmits([
 ])
 
 const folders = ref([])
+const { t } = useLanguage()
 
 const modalOpen = ref(false)
 const modalMode = ref("")

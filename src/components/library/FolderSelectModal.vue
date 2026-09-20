@@ -2,7 +2,7 @@
   <div class="folder-overlay" @click.self="close">
     <div class="folder-modal">
       <header class="modal-header">
-        <h3>移動先を選択</h3>
+        <h3>{{ t("chooseDestination") }}</h3>
         <button class="close-button" @click="close">×</button>
       </header>
 
@@ -14,7 +14,7 @@
           @click="select(folder.id)"
         >
           <span>{{ folder.icon ?? "📁" }}</span>
-          <span>{{ folder.name }}</span>
+          <span>{{ folder.id === "" ? t("uncategorized") : folder.name }}</span>
         </button>
       </div>
     </div>
@@ -25,6 +25,9 @@
 import { computed } from "vue"
 import defaultFolders from "@/data/defaultFolders"
 import { getUserFolders } from "@/utils/userFolders"
+import { useLanguage } from "@/composables/useLanguage"
+
+const { t } = useLanguage()
 
 const emit = defineEmits([
   "select",

@@ -11,6 +11,8 @@ import Renderer from "@/components/renderer/Renderer.vue"
 import { useClipboard } from "@/composables/useClipboard"
 import { useExport } from "@/composables/useExport"
 import { useShare } from "@/composables/useShare"
+import LanguageSwitcher from "@/components/LanguageSwitcher.vue"
+import { useLanguage } from "@/composables/useLanguage"
 
 const router = useRouter()
 const markdown = ref(localStorage.getItem("content") || "")
@@ -19,6 +21,7 @@ const previewRef = ref(null)
 const { copyImage } = useClipboard(previewRef, markdown)
 const { exportMarkdown, exportHTML, exportPNG, exportPDF } = useExport(previewRef, markdown)
 const { shareX, shareFacebook, shareNative } = useShare()
+const { t } = useLanguage()
 
 </script>
 
@@ -32,9 +35,10 @@ const { shareX, shareFacebook, shareNative } = useShare()
           alt="MangaDown Logo"
         >
         <div>
-          <h1 class="save-title">Publish</h1>
-          <p class="save-subtitle">Review your manga before publishing.</p>
+          <h1 class="save-title">{{ t("publishTitle") }}</h1>
+          <p class="save-subtitle">{{ t("publishSubtitle") }}</p>
         </div>
+        <LanguageSwitcher />
       </div>
     </header>
 
@@ -46,7 +50,7 @@ const { shareX, shareFacebook, shareNative } = useShare()
             <div class="save-view-actions">
               <button class="save-copy-button" @click="copyImage">
                 <FontAwesomeIcon :icon="faCopy" />
-                <span>Copy</span>
+                <span>{{ t("copy") }}</span>
               </button>
             </div>
           </div>
@@ -56,12 +60,12 @@ const { shareX, shareFacebook, shareNative } = useShare()
           </div>
         </div>
 
-        <button class="save-back" @click="router.push('/write-md')">← Back</button>
+        <button class="save-back" @click="router.push('/write-md')">← {{ t("back") }}</button>
       </section>
 
       <aside class="save-actions">
         <section class="save-action-group">
-          <h2 class="save-action-title">出力する</h2>
+          <h2 class="save-action-title">{{ t("output") }}</h2>
           <div class="save-button-grid">
             <button class="save-action-button" @click="exportMarkdown">Markdown</button>
             <button class="save-action-button" @click="exportHTML">HTML</button>
@@ -71,11 +75,11 @@ const { shareX, shareFacebook, shareNative } = useShare()
         </section>
 
         <section class="save-action-group">
-          <h2 class="save-action-title">共有する</h2>
+          <h2 class="save-action-title">{{ t("share") }}</h2>
           <div class="save-button-grid">
             <button class="save-action-button" @click="shareX()">X</button>
             <button class="save-action-button" @click="shareFacebook()">Facebook</button>
-            <button class="save-action-button" @click="shareNative()">その他</button>
+            <button class="save-action-button" @click="shareNative()">{{ t("other") }}</button>
           </div>
         </section>
       </aside>

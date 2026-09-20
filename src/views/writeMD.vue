@@ -11,8 +11,11 @@ import parseManga from "@/parser/manga/parseManga"
 import { validateImageName } from "@/utils/imageValidator"
 import { saveUserAsset } from "@/utils/userAssets"
 import { getAllAssets } from "@/utils/assetResolver"
+import LanguageSwitcher from "@/components/LanguageSwitcher.vue"
+import { useLanguage } from "@/composables/useLanguage"
 
 const router = useRouter()
+const { t } = useLanguage()
 const fileInput = ref(null)
 const pickerOpen = ref(false)
 const uploadOpen = ref(false)
@@ -394,7 +397,7 @@ watch(editorBlocks, () => {
 }, { deep: true })
 
 const panelCountLabel = computed(() =>
-  `${panels.value.length} panel${panels.value.length === 1 ? "" : "s"}`
+  `${panels.value.length} ${t("panel")}${panels.value.length === 1 ? "" : "s"}`
 )
 
 syncContent()
@@ -411,16 +414,17 @@ resizeAllTextAreas()
           <p>Arrange panels, bubbles, tails, and images visually.</p>
         </div>
       </div>
+      <LanguageSwitcher />
     </header>
 
     <main class="write-md-workspace">
       <section class="write-md-editor-panel" :class="{ 'write-md-mobile-hidden': mobileView !== 'editor' }">
         <div class="write-md-panel-title">
-          <span>Visual editor <small>{{ panelCountLabel }}</small></span>
+          <span>{{ t("visualEditor") }} <small>{{ panelCountLabel }}</small></span>
           <div class="write-md-editor-toolbar">
-            <button class="write-md-toolbar-button" @click="openImagePicker">画像をアップロード</button>
-            <button class="write-md-toolbar-button" @click="addPanel">＋ コマを追加</button>
-            <button class="write-md-toolbar-button" @click="addText">＋ テキストを追加</button>
+            <button class="write-md-toolbar-button" @click="openImagePicker">{{ t("uploadImage") }}</button>
+            <button class="write-md-toolbar-button" @click="addPanel">{{ t("addPanel") }}</button>
+            <button class="write-md-toolbar-button" @click="addText">{{ t("addText") }}</button>
             <input ref="fileInput" type="file" accept="image/*" hidden @change="onImageSelected">
           </div>
         </div>
@@ -435,12 +439,12 @@ resizeAllTextAreas()
               @drop.prevent="dropBlock(blockIndex)"
             >
               <header class="write-md-card-header" draggable="true" @dragstart="startBlockDrag($event, blockIndex)" @dragend="endBlockDrag">
-                <div><span class="write-md-index">T</span><strong>Text</strong></div>
-                <button class="write-md-icon-button" title="テキストを削除" @click="removeText(blockIndex)">×</button>
+                <div><span class="write-md-index">T</span><strong>{{ t("text") }}</strong></div>
+                <button class="write-md-icon-button" :title="t('deleteText')" @click="removeText(blockIndex)">×</button>
               </header>
 
               <div class="write-md-text-block-body">
-                <textarea v-model="block.content" rows="1" placeholder="普通の文章を入力" @input="resizeTextArea($event.target); syncContent"></textarea>
+                <textarea v-model="block.content" rows="1" :placeholder="t('plainText')" @input="resizeTextArea($event.target); syncContent"></textarea>
               </div>
             </article>
 
@@ -452,81 +456,81 @@ resizeAllTextAreas()
               @drop.prevent="dropBlock(blockIndex)"
             >
               <header class="write-md-card-header" draggable="true" @dragstart="startBlockDrag($event, blockIndex)" @dragend="endBlockDrag">
-                <div><span class="write-md-index">{{ String(blockIndex + 1).padStart(2, "0") }}</span><strong>Panel</strong></div>
-                <button class="write-md-icon-button" title="コマを削除" @click="removePanel(blockIndex)">×</button>
+                <div><span class="write-md-index">{{ String(blockIndex + 1).padStart(2, "0") }}</span><strong>{{ t("panel") }}</strong></div>
+                <button class="write-md-icon-button" :title="t('deletePanel')" @click="removePanel(blockIndex)">×</button>
               </header>
 
               <div class="write-md-fields">
-                <label>背景色<input v-model="block.panel.backgroundColor" type="color" @change="syncContent"></label>
-                <label>枠線<select v-model="block.panel.border" @change="syncContent"><option value="solid">実線</option><option value="dashed">破線</option><option value="none">なし</option></select></label>
-                <label>枠線幅<input v-model.number="block.panel.borderWidth" type="number" min="0" step="1" @change="syncContent"></label>
-                <label>左位置 (px)<input v-model.number="block.panel.position.x" type="number" @change="syncContent"></label>
-                <label>上位置 (px)<input v-model.number="block.panel.position.y" type="number" @change="syncContent"></label>
-                <label>幅 (px)<input v-model.number="block.panel.size.width" type="number" min="1" @change="syncContent"></label>
-                <label>高さ (px)<input v-model.number="block.panel.size.height" type="number" min="1" @change="syncContent"></label>
+                <label>{{ t("backgroundColor") }}<input v-model="block.panel.backgroundColor" type="color" @change="syncContent"></label>
+                <label>{{ t("border") }}<select v-model="block.panel.border" @change="syncContent"><option value="solid">{{ t("solid") }}</option><option value="dashed">{{ t("dashed") }}</option><option value="none">{{ t("none") }}</option></select></label>
+                <label>{{ t("borderWidth") }}<input v-model.number="block.panel.borderWidth" type="number" min="0" step="1" @change="syncContent"></label>
+                <label>{{ t("leftPx") }}<input v-model.number="block.panel.position.x" type="number" @change="syncContent"></label>
+                <label>{{ t("topPx") }}<input v-model.number="block.panel.position.y" type="number" @change="syncContent"></label>
+                <label>{{ t("widthPx") }}<input v-model.number="block.panel.size.width" type="number" min="1" @change="syncContent"></label>
+                <label>{{ t("heightPx") }}<input v-model.number="block.panel.size.height" type="number" min="1" @change="syncContent"></label>
               </div>
 
               <div class="write-md-component-list">
                 <section v-for="(component, componentIndex) in block.panel.components" :key="componentIndex" class="write-md-component-card">
                   <template v-if="component.bubble">
                     <div class="write-md-component-heading">
-                      <strong>吹き出し</strong>
-                      <button class="write-md-remove-link" @click="removeComponent(block.panel, component)">削除</button>
+                      <strong>{{ t("bubble") }}</strong>
+                      <button class="write-md-remove-link" @click="removeComponent(block.panel, component)">{{ t("remove") }}</button>
                     </div>
 
                     <div class="write-md-fields">
-                      <label>形<select v-model="component.bubble[0].shape" @change="syncContent"><option v-for="option in shapeOptions" :key="option.value" :value="option.value">{{ option.label }}</option></select></label>
-                      <label>レイヤー<input v-model.number="component.bubble[0].layer" type="number" @change="syncContent"></label>
-                      <label>左位置 (%)<input v-model.number="component.bubble[0].position.x" type="number" @change="syncContent"></label>
-                      <label>上位置 (%)<input v-model.number="component.bubble[0].position.y" type="number" @change="syncContent"></label>
-                      <label>幅 (px)<input v-model.number="component.bubble[0].size.width" type="number" min="1" @change="syncContent"></label>
-                      <label>高さ (px)<input v-model.number="component.bubble[0].size.height" type="number" min="1" @change="syncContent"></label>
-                      <label>塗り<input v-model="component.bubble[0].background" type="color" @change="syncContent"></label>
-                      <label>枠線<select v-model="component.bubble[0].border" @change="syncContent"><option :value="true">表示</option><option :value="false">非表示</option></select></label>
+                      <label>{{ t("shape") }}<select v-model="component.bubble[0].shape" @change="syncContent"><option v-for="option in shapeOptions" :key="option.value" :value="option.value">{{ option.label }}</option></select></label>
+                      <label>{{ t("layer") }}<input v-model.number="component.bubble[0].layer" type="number" @change="syncContent"></label>
+                      <label>{{ t("leftPercent") }}<input v-model.number="component.bubble[0].position.x" type="number" @change="syncContent"></label>
+                      <label>{{ t("topPercent") }}<input v-model.number="component.bubble[0].position.y" type="number" @change="syncContent"></label>
+                      <label>{{ t("widthPx") }}<input v-model.number="component.bubble[0].size.width" type="number" min="1" @change="syncContent"></label>
+                      <label>{{ t("heightPx") }}<input v-model.number="component.bubble[0].size.height" type="number" min="1" @change="syncContent"></label>
+                      <label>{{ t("fill") }}<input v-model="component.bubble[0].background" type="color" @change="syncContent"></label>
+                      <label>{{ t("border") }}<select v-model="component.bubble[0].border" @change="syncContent"><option :value="true">{{ t("show") }}</option><option :value="false">{{ t("hide") }}</option></select></label>
                     </div>
 
                     <div class="write-md-text-editor">
-                      <strong>本文</strong>
-                      <textarea v-model="component.bubble[0].text.content" rows="2" placeholder="吹き出しの文章" @input="resizeTextArea($event.target); syncContent"></textarea>
+                      <strong>{{ t("body") }}</strong>
+                      <textarea v-model="component.bubble[0].text.content" rows="2" :placeholder="t('bubbleText')" @input="resizeTextArea($event.target); syncContent"></textarea>
                       <div class="write-md-fields">
-                        <label>文字サイズ<input v-model.number="component.bubble[0].text.fontSize" type="number" min="1" @change="syncContent"></label>
-                        <label>方向<select v-model="component.bubble[0].text.direction" @change="syncContent"><option value="rl">横書き</option><option value="tb">縦書き</option></select></label>
-                        <label>本文 X (%)<input v-model.number="component.bubble[0].text.position.x" type="number" @change="syncContent"></label>
-                        <label>本文 Y (%)<input v-model.number="component.bubble[0].text.position.y" type="number" @change="syncContent"></label>
+                        <label>{{ t("fontSize") }}<input v-model.number="component.bubble[0].text.fontSize" type="number" min="1" @change="syncContent"></label>
+                        <label>{{ t("direction") }}<select v-model="component.bubble[0].text.direction" @change="syncContent"><option value="rl">{{ t("horizontal") }}</option><option value="tb">{{ t("vertical") }}</option></select></label>
+                        <label>{{ t("bodyX") }}<input v-model.number="component.bubble[0].text.position.x" type="number" @change="syncContent"></label>
+                        <label>{{ t("bodyY") }}<input v-model.number="component.bubble[0].text.position.y" type="number" @change="syncContent"></label>
                       </div>
                     </div>
 
                     <div v-for="(tail, tailIndex) in component.bubble[0].tail" :key="tailIndex" class="write-md-tail-row">
-                      <select v-model="tail.shape" @change="syncContent"><option value="triangle">三角</option><option value="circle">丸</option></select>
-                      <label>角度<input v-model.number="tail.position" type="number" min="0" max="360" @change="syncContent"></label>
-                      <label>倍率<input v-model.number="tail.size" type="number" min="0" step="0.1" @change="syncContent"></label>
-                      <label>距離<input v-model.number="tail.distance" type="number" min="0" @change="syncContent"></label>
-                      <button class="write-md-remove-link" @click="removeTail(component.bubble[0], tail)">削除</button>
+                      <select v-model="tail.shape" @change="syncContent"><option value="triangle">{{ t("triangle") }}</option><option value="circle">{{ t("circle") }}</option></select>
+                      <label>{{ t("angle") }}<input v-model.number="tail.position" type="number" min="0" max="360" @change="syncContent"></label>
+                      <label>{{ t("scale") }}<input v-model.number="tail.size" type="number" min="0" step="0.1" @change="syncContent"></label>
+                      <label>{{ t("distance") }}<input v-model.number="tail.distance" type="number" min="0" @change="syncContent"></label>
+                      <button class="write-md-remove-link" @click="removeTail(component.bubble[0], tail)">{{ t("remove") }}</button>
                     </div>
 
-                    <button class="write-md-small-button" @click="addTail(component.bubble[0])">＋ しっぽを追加</button>
+                    <button class="write-md-small-button" @click="addTail(component.bubble[0])">{{ t("addTail") }}</button>
                   </template>
 
                   <template v-else-if="component.image">
                     <div class="write-md-component-heading">
-                      <strong>画像: {{ component.image[0].name }}</strong>
-                      <button class="write-md-remove-link" @click="removeComponent(block.panel, component)">削除</button>
+                      <strong>{{ t("image") }}: {{ component.image[0].name }}</strong>
+                      <button class="write-md-remove-link" @click="removeComponent(block.panel, component)">{{ t("remove") }}</button>
                     </div>
 
                     <div class="write-md-fields">
-                      <label>レイヤー<input v-model.number="component.image[0].layer" type="number" @change="syncContent"></label>
-                      <label>左位置 (%)<input v-model.number="component.image[0].position.x" type="number" @change="syncContent"></label>
-                      <label>上位置 (%)<input v-model.number="component.image[0].position.y" type="number" @change="syncContent"></label>
-                      <label>幅 (px)<input v-model.number="component.image[0].size.width" type="number" min="1" @change="syncContent"></label>
-                      <label>高さ (px)<input v-model.number="component.image[0].size.height" type="number" min="1" @change="syncContent"></label>
+                      <label>{{ t("layer") }}<input v-model.number="component.image[0].layer" type="number" @change="syncContent"></label>
+                      <label>{{ t("leftPercent") }}<input v-model.number="component.image[0].position.x" type="number" @change="syncContent"></label>
+                      <label>{{ t("topPercent") }}<input v-model.number="component.image[0].position.y" type="number" @change="syncContent"></label>
+                      <label>{{ t("widthPx") }}<input v-model.number="component.image[0].size.width" type="number" min="1" @change="syncContent"></label>
+                      <label>{{ t("heightPx") }}<input v-model.number="component.image[0].size.height" type="number" min="1" @change="syncContent"></label>
                     </div>
                   </template>
                 </section>
               </div>
 
               <footer class="write-md-card-actions">
-                <button class="write-md-small-button" @click="addBubble(block.panel)">＋ 吹き出し</button>
-                <button class="write-md-small-button" @click="addImage(block.panel)">＋ 画像</button>
+                <button class="write-md-small-button" @click="addBubble(block.panel)">{{ t("addBubble") }}</button>
+                <button class="write-md-small-button" @click="addImage(block.panel)">{{ t("addImage") }}</button>
               </footer>
             </article>
           </template>
@@ -535,7 +539,7 @@ resizeAllTextAreas()
 
       <section class="write-md-preview-panel" :class="{ 'write-md-mobile-hidden': mobileView !== 'preview' }">
         <div class="write-md-panel-title">
-          <span>Preview</span>
+          <span>{{ t("preview") }}</span>
         </div>
 
         <div class="write-md-preview">
@@ -546,19 +550,19 @@ resizeAllTextAreas()
 
     <div class="write-md-mobile-toggle">
       <button class="write-md-mobile-toggle-button" :class="{ active: mobileView === 'editor' }" @click="mobileView = 'editor'">
-        編集
+        {{ t("editor") }}
       </button>
       <button class="write-md-mobile-toggle-button" :class="{ active: mobileView === 'preview' }" @click="mobileView = 'preview'">
-        プレビュー
+        {{ t("preview") }}
       </button>
     </div>
 
     <footer class="write-md-button-panel">
       <button class="write-md-secondary-button" @click="router.push('/')">
-        ← ホームに戻る
+        ← {{ t("home") }}
       </button>
       <button class="write-md-primary-button" @click="router.push('/save')">
-        出力する →
+        {{ t("publish") }}
       </button>
     </footer>
 

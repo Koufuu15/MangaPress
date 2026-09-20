@@ -3,6 +3,7 @@ import "@/assets/imageDrawer.css"
 import { computed, ref, watch } from "vue"
 import defaultAssets from "@/data/defaultAssets"
 import defaultFolders from "@/data/defaultFolders"
+import { useLanguage } from "@/composables/useLanguage"
 import {
   getUserAssets,
   deleteUserAsset,
@@ -36,6 +37,7 @@ const sortType = ref("updated")
 const userAssets = ref([])
 const userFolders = ref([])
 const folderOpen = ref(true)
+const { t } = useLanguage()
 
 watch(() => props.open, open => {
   if(!open) return
@@ -121,7 +123,7 @@ function selectFolder(id){
 function removeAsset(asset){
   if(asset.type === "default") return
 
-  const ok = confirm(`${asset.name}を削除しますか？`)
+  const ok = confirm(`${asset.name} ${t("remove")}?`)
 
   if(!ok) return
 
@@ -133,7 +135,7 @@ function rename(asset){
   if(asset.type === "default") return
 
   const newName = prompt(
-    "新しい名前",
+    t("rename"),
     asset.name
   )
 
@@ -145,7 +147,7 @@ function rename(asset){
   )
 
   if(!success){
-    alert("同じ名前の画像があります")
+    alert(t("folderExists"))
   }
 
   reloadAssets()
@@ -155,7 +157,7 @@ function renameFolder(folder){
   if(folder.type === "default") return
 
   const newName = prompt(
-    "新しいフォルダ名",
+    t("folderName"),
     folder.name
   )
 
@@ -167,7 +169,7 @@ function renameFolder(folder){
   )
 
   if(!success){
-    alert("同じ名前のフォルダがあります")
+    alert(t("folderExists"))
   }
 
   reloadAssets()

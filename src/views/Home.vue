@@ -1,8 +1,11 @@
 <script setup>
 import { useRouter } from "vue-router"
 import "../assets/Home.css"
+import LanguageSwitcher from "@/components/LanguageSwitcher.vue"
+import { useLanguage } from "@/composables/useLanguage"
 
 const router = useRouter()
+const { t } = useLanguage()
 </script>
 
 <template>
@@ -20,9 +23,10 @@ const router = useRouter()
 
           <div class="md-home-brand-text">
             <h1>MangaDown</h1>
-            <p>Turn Markdown into Manga</p>
+            <p>{{ t("homeTagline") }}</p>
           </div>
         </div>
+        <LanguageSwitcher />
       </header>
 
 
@@ -32,16 +36,9 @@ const router = useRouter()
         <div class="md-home-hero-text">
           <span class="md-home-hero-label">MARKDOWN × MANGA</span>
 
-          <h2>
-            Markdownから<br>
-            漫画を作ろう。
-          </h2>
+          <h2>{{ t("homeTagline") }}</h2>
 
-          <p>
-            独自Markdownを書くだけで漫画をレイアウト。
-            吹き出し・画像・背景・コマ割りを自由に配置し、
-            リアルタイムプレビューを見ながら編集できます。
-          </p>
+          <p>{{ t("homeDescription") }}</p>
         </div>
 
 
@@ -50,7 +47,7 @@ const router = useRouter()
             class="md-home-primary-button"
             @click="router.push('/write-md')"
           >
-            漫画を作る
+            {{ t("create") }}
             <span>→</span>
           </button>
 
@@ -58,7 +55,7 @@ const router = useRouter()
             class="md-home-secondary-button"
             @click="router.push('/guide')"
           >
-            ガイドを見る
+            {{ t("guide") }}
           </button>
         </div>
 

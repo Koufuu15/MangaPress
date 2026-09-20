@@ -1,24 +1,25 @@
 <template>
-  <label for="url">WebサイトのURLを入力</label><br>
-  <input id="url" type="url" placeholder="URLを入力" v-model="url"/>
-  <input type="button" value="読み込む" @click="parseUrl"/>
+  <LanguageSwitcher />
+  <label for="url">{{ t("urlLabel") }}</label><br>
+  <input id="url" type="url" :placeholder="t('urlPlaceholder')" v-model="url"/>
+  <input type="button" :value="t('load')" @click="parseUrl"/>
 
   <div class="flexbox">
     <div class="manga">
-      <p v-if="isLoading">Thinking...</p>
-      <p v-else-if="!url">URLを入力してください</p>
+      <p v-if="isLoading">{{ t("thinking") }}</p>
+      <p v-else-if="!url">{{ t("enterUrl") }}</p>
       <p v-else-if="resMd">{{ resMd }}</p>
-      <p v-else-if="!res">データの取得に失敗しました</p>
+      <p v-else-if="!res">{{ t("fetchFailed") }}</p>
     </div>
     <div class="manga">
       <p v-if="resImg" v-html="resImg"></p>
-      <p v-else>プレビュー</p>
+      <p v-else>{{ t("preview") }}</p>
     </div>
   </div>
 
-  <input type="button" value="エディタで編集" @click="gotoEditor(resMd)"/>
-  <input type="button" value="このまま公開" @click="$router.push('/save')"/>
-  <input type="button" value="ホームに戻る" @click="$router.push('/')"/>
+  <input type="button" :value="t('editInEditor')" @click="gotoEditor(resMd)"/>
+  <input type="button" :value="t('publishNow')" @click="$router.push('/save')"/>
+  <input type="button" :value="t('home')" @click="$router.push('/')"/>
 </template>
 
 <script setup>
@@ -26,7 +27,10 @@ import { ref } from 'vue'
 import '../assets/main.css'
 
 import { useRouter } from 'vue-router'
+import LanguageSwitcher from "@/components/LanguageSwitcher.vue"
+import { useLanguage } from "@/composables/useLanguage"
 const router = useRouter()
+const { t } = useLanguage()
 
 const url = ref('')
 const resMd = ref('')

@@ -1,4 +1,7 @@
+import { useLanguage } from "@/composables/useLanguage"
+
 export function useShare() {
+  const { t } = useLanguage()
 
   /**
    * X(Twitter)
@@ -49,7 +52,7 @@ export function useShare() {
   } = {}) {
 
     if (!navigator.share) {
-      alert("このブラウザは共有機能に対応していません。")
+      alert(t("shareUnsupported"))
       return
     }
 

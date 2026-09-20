@@ -13,7 +13,7 @@
       </span>
 
       <span>
-        {{ folder.name }}
+        {{ folder.id === "" ? t("uncategorized") : folder.name }}
       </span>
     </button>
 
@@ -22,13 +22,17 @@
       class="manage-button"
       @click="manage"
     >
-      ⚙ フォルダ管理
+      {{ t("folderManagement") }}
     </button>
 
   </nav>
 </template>
 
 <script setup>
+import { useLanguage } from "@/composables/useLanguage"
+
+const { t } = useLanguage()
+
 const props = defineProps({
   folders:{
     type:Array,
