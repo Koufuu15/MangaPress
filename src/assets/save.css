@@ -176,6 +176,25 @@
   word-break: break-word;
 }
 
+.save-preview .markdown-resize-handle,
+.save-preview .markdown-selected {
+  outline: none;
+}
+
+.save-preview .markdown-resize-handle {
+  display: none;
+}
+
+.save-preview .panel-resize-handle,
+.save-preview .element-resize-handle {
+  display: none;
+}
+
+.save-preview .panel-selected,
+.save-preview .element-selected {
+  outline: none;
+}
+
 .save-markdown {
   flex: 1;
   width: 100%;

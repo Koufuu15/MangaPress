@@ -1,37 +1,52 @@
 export default [
   {
-    id: "getting-started",
-    title: "はじめに",
+    id: "workflow",
+    title: "使い方",
     description:
-      "MangaDownでは、通常のMarkdownの中に:::mangaブロックを置いて漫画を作ります。",
-    code: `# 漫画の説明
+      "ホームの「漫画を作る」からManga Editorを開き、左側の編集パネルで漫画を組み立てます。右側のPreviewは操作内容をリアルタイムに反映します。",
+    notes: [
+      "「＋ コマを追加」でパネルを追加し、カードをドラッグして並び順を変更できます。",
+      "パネル内の「＋ 吹き出し」「＋ 画像」で要素を追加し、表示された入力欄から位置・サイズ・色などを調整します。",
+      "「＋ テキストを追加」では、コマの間に通常のMarkdown本文を追加できます。",
+      "画像は「画像をアップロード」から登録して、パネルの「＋ 画像」で配置します。",
+      "スマートフォンでは下部の「編集」「プレビュー」で表示を切り替えます。",
+      "編集が終わったら「出力する」を押し、Preview画面からMarkdown・HTML・PNG・PDFの出力や共有を行います。"
+    ]
+  },
+
+  {
+    id: "getting-started",
+    title: "記法の基本",
+    description:
+      "ビジュアルエディターで作成した内容は、通常のMarkdownと:::mangaブロックを組み合わせた形式で保存されます。ガイドのサンプルはコピーして記法を確認できます。",
+    code: `# ページの説明
 
 通常のMarkdown本文はそのまま表示されます。
 
 :::manga
 # panel
 - backgroundColor: #f4f0e8
+- border: solid
+- borderWidth: 2
+- borderColor: #18181b
 - position: { x: 0, y: 0 }
-- size: { w: 300, h: 200 }
+- size: { w: 500, h: 360 }
 
 ## bubble
 - layer: 1
 - shape: round
+- background: #ffffff
+- border: true
 - position: { x: 20, y: 18 }
 - size: { w: 200, h: 100 }
 
 ### text
 - content: "こんにちは！"
-- font: UTF-8
+- font: sans-serif
 - size: 18
-- color: black
+- color: #111111
+- direction: rl
 - position: { x: 0, y: 0 }
-
-## image
-- name: boy_arm
-- layer: 0
-- position: { x: 20, y: 20 }
-- size: { w: 150, h: 150 }
 
 :::`
   },
